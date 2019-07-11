@@ -44,17 +44,19 @@ import numpy as np
 # Note: Edit PythonAPI/Makefile and replace "python" with "python3".
 from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
-from pycocotools import mask as maskUtuils
+from pycocotools import mask as maskUtils
 
 import zipfile
 import urllib.request
 import shutil
 
-# Root directory of the project
-ROOT_DIR = "/Users/p099947-dev/PycharmProjects/Vision/Vision"
+#os.environ['ROOT_DIR'] = '/Users/p099947-dev/PycharmProjects/Vision/Vision'
+#ROOT_DIR = os.environ["ROOT_DIR"]
+
+ROOT_DIR = os.path.abspath('../..')
 
 # Dataset directory
-dataset_dir = "/Users/p099947-dev/PycharmProjects/Vision/Vision/data/processed/Dataset_v2"
+dataset_dir = os.path.join(ROOT_DIR, "data/processed/Dataset_v2")
 
 # Import Mask RCNN
 sys.path.append(ROOT_DIR)  # To find local version of the library
@@ -91,7 +93,7 @@ class WaterBottleConfig(Config):
     # Number of classes (including background)
     NUM_CLASSES = 1 + 3  # BG + 3 classes
 
-
+# gsutil cp gs://my-mscoco-test-rendig .
 ############################################################
 #  Dataset
 ############################################################
@@ -105,7 +107,7 @@ class WaterBottleDataset(utils.Dataset):
         """
 
 
-        water_bottle = COCO("{}/annotations/instances_{}.json".format(dataset_dir, subset))
+        water_bottle = COCO("{}/instances_{}.json".format(dataset_dir, subset))
         image_dir = "{}/bottle/{}".format(dataset_dir, subset)
 
         # Load all classes or a subset?
@@ -329,7 +331,6 @@ def evaluate_water_bottle(model, dataset, water_bottle, eval_type="bbox", limit=
 
 if __name__ == '__main__':
     import argparse
-
     # Parse command line arguments
     parser = argparse.ArgumentParser(
         description='Train Mask R-CNN to detect parts of a water bottle.')
@@ -383,26 +384,26 @@ if __name__ == '__main__':
 
     # Select weights file to load
     if args.model.lower() == "coco":
-        weights_path = COCO_MODEL_PATH
+        model_path = COCO_MODEL_PATH
     elif args.model.lower() == "last":
         # Find last trained weights
-        weights_path = model.find_last()
+        model_path = model.find_last()
     elif args.model.lower() == "imagenet":
         # Start from ImageNet trained weights
-        weights_path = model.get_imagenet_weights()
+        model_path = model.get_imagenet_weights()
     else:
-        weights_path = args.model
+        model_path = args.model
 
     # Load weights
-    print("Loading weights ", weights_path)
-    if args.weights.lower() == "coco":
+    print("Loading weights ", model_path)
+    if args.model.lower() == "coco":
         # Exclude the last layers because they require a matching
         # number of classes
-        model.load_weights(weights_path, by_name=True, exclude=[
+        model.load_weights(model_path, by_name=True, exclude=[
             "mrcnn_class_logits", "mrcnn_bbox_fc",
             "mrcnn_bbox", "mrcnn_mask"])
     else:
-        model.load_weights(weights_path, by_name=True)
+        model.load_weights(model_path, by_name=True)
 
     # Train or evaluate
     if args.command == "train":

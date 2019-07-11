@@ -4,12 +4,18 @@ import datetime
 import json
 import os
 import re
+import sys
 import fnmatch
 from PIL import Image
 import numpy as np
-from pycococreatortools import pycococreatortools
 
-ROOT_DIR = "/Users/p099947-dev/PycharmProjects/Vision/Vision/data/processed/Dataset_v2"
+sys.path.append('/Users/p099947-dev/PycharmProjects/Vision/')
+from pycococreator.pycococreatortools import pycococreatortools
+#os.environ['ROOT_DIR'] = '/Users/p099947-dev/PycharmProjects/Vision/Vision'
+#ROOT_DIR = os.environ['ROOT_DIR']
+
+ROOT_DIR = os.path.abspath('../../data/processed/Dataset_v2')
+
 IMAGE_DIR = os.path.join(ROOT_DIR, "bottle/val")
 ANNOTATION_DIR = os.path.join(ROOT_DIR, "annotations/val")
 

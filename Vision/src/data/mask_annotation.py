@@ -46,9 +46,12 @@ def make_masks(image):
     
     
 """
+ROOT_DIR = os.path.abspath('../..')
+#os.environ['ROOT_DIR'] = '/Users/p099947-dev/PycharmProjects/Vision/Vision'
+#ROOT_DIR = os.environ["ROOT_DIR"]
 
-ann_folder_path = "/Users/p099947-dev/PycharmProjects/Vision/Vision/data/processed/Dataset_v2/annotations/train"
-masks_folder_path = "/Users/p099947-dev/PycharmProjects/Vision/Vision/data/raw/Dataset_v2/masks/train"
+ann_folder_path = os.path.join(ROOT_DIR,'/data/processed/Dataset_v2/annotations/train')
+masks_folder_path = os.path.join(ROOT_DIR,'/data/raw/Dataset_v2/masks/train')
 
 files = os.listdir(masks_folder_path)
 

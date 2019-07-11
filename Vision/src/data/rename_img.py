@@ -1,6 +1,11 @@
 import os
 import re
 
+#os.environ['ROOT_DIR'] = '/Users/p099947-dev/PycharmProjects/Vision/Vision'
+#ROOT_DIR = os.environ['ROOT_DIR']
+
+ROOT_DIR = os.path.abspath('../..')
+
 def rename_imgs(folder_path):
     """
     Renames the multiple file within the same directory with appending number
@@ -14,8 +19,7 @@ def rename_imgs(folder_path):
             os.rename(os.path.join(folder_path, file), os.path.join(folder_path, new_filename + file_extension))
 
 
-
-rename_imgs('/Users/p099947-dev/PycharmProjects/Vision/Vision/data/raw/Dataset_v2/bottle_train')
-rename_imgs('/Users/p099947-dev/PycharmProjects/Vision/Vision/data/raw/Dataset_v2/masks')
+rename_imgs(os.path.join(ROOT_DIR,'data/raw/Dataset_v2/bottle_train'))
+rename_imgs(os.path.join(ROOT_DIR, 'data/raw/Dataset_v2/masks'))
 
 
