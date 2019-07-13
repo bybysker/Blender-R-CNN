@@ -47,11 +47,12 @@ def make_masks(image):
     
 """
 ROOT_DIR = os.path.abspath('../..')
-#os.environ['ROOT_DIR'] = '/Users/p099947-dev/PycharmProjects/Vision/Vision'
-#ROOT_DIR = os.environ["ROOT_DIR"]
 
-ann_folder_path = os.path.join(ROOT_DIR,'/data/processed/Dataset_v2/annotations/train')
-masks_folder_path = os.path.join(ROOT_DIR,'/data/raw/Dataset_v2/masks/train')
+
+ann_folder_path = os.path.join(ROOT_DIR, 'data/processed/Dataset_v3/annotations/val')
+
+masks_folder_path = os.path.join(ROOT_DIR, 'data/raw/Dataset_v3/masks/val')
+
 
 files = os.listdir(masks_folder_path)
 
@@ -70,16 +71,16 @@ for file in files:
         # Interval of color to track
 
         # couvercle:
-        lower_couv = np.array([14 - 10, 100, 100])
-        upper_couv = np.array([14 + 10, 255, 255])
+        lower_couv = np.array([0, 100, 100])
+        upper_couv = np.array([10, 255, 255])
 
         # bouteille :
-        lower_bott = np.array([163 - 15, 10, 255])
-        upper_bott = np.array([163 + 15, 50, 255])
+        lower_bott = np.array([60 - 5, 100, 100])
+        upper_bott = np.array([60 + 5, 255, 255])
 
         # etiquette :
-        lower_etiq = np.array([80, 0, 0])
-        upper_etiq = np.array([100, 255, 255])
+        lower_etiq = np.array([120 - 5, 100, 100])
+        upper_etiq = np.array([120 + 5, 255, 255])
 
         # Mask obtention
         mask_couv = cv2.inRange(hsv_image, lower_couv, upper_couv)

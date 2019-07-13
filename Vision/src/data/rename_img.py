@@ -1,25 +1,37 @@
-import os
 import re
+import os
+import shutil
+import numpy as np
 
-#os.environ['ROOT_DIR'] = '/Users/p099947-dev/PycharmProjects/Vision/Vision'
-#ROOT_DIR = os.environ['ROOT_DIR']
+"""
+Renames the multiple file within the same directory with appending number
+"""
+input_dir = "/Users/p099947-dev/Desktop/Master2RD/Blend/Dataset__v3/normal"
+output_dir ="/Users/p099947-dev/PycharmProjects/Vision/Vision/data/processed/Dataset_v3/bottle"
 
-ROOT_DIR = os.path.abspath('../..')
+def copy_split (input_dir, output_dir):
 
-def rename_imgs(folder_path):
-    """
-    Renames the multiple file within the same directory with appending number
-    """
-    files = os.listdir(folder_path)
+    train_dir = os.path.join(output_dir, "train")
+    val_dir = os.path.join(output_dir, "val")
 
-    for file in files:
-        if re.search("[0-9]",file):
-            filename, file_extension = os.path.splitext(file)
-            new_filename = re.findall("[0-9]+", filename)[0]
-            os.rename(os.path.join(folder_path, file), os.path.join(folder_path, new_filename + file_extension))
+    if not os.path.exists(train_dir):
+        os.makedirs(train_dir)
 
+    if not os.path.exists(val_dir):
+        os.makedirs(val_dir)
 
-rename_imgs(os.path.join(ROOT_DIR,'data/raw/Dataset_v2/bottle_train'))
-rename_imgs(os.path.join(ROOT_DIR, 'data/raw/Dataset_v2/masks'))
+    filepaths = [os.path.join(input_dir, f) for f in os.listdir(input_dir) if re.search("[0-9]", f)]
+    train_files = np.random.choice(filepaths, int(0.8 * len(filepaths)), replace=False).tolist()
+    val_files = list(set(filepaths) - set(train_files))
 
+    for p in train_files:
+        fn = os.path.basename(p).replace("nor", "")
+        path = os.path.join(train_dir, fn)
+        shutil.copyfile(p, path)
 
+    for p in val_files:
+        fn = os.path.basename(p).replace("nor", "")
+        path = os.path.join(val_dir, fn)
+        shutil.copyfile(p, path)
+
+copy_split(input_dir,output_dir)
