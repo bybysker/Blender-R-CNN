@@ -14,7 +14,7 @@ from pycococreator.pycococreatortools import pycococreatortools
 #os.environ['ROOT_DIR'] = '/Users/p099947-dev/PycharmProjects/Vision/Vision'
 #ROOT_DIR = os.environ['ROOT_DIR']
 
-ROOT_DIR = os.path.abspath('../../data/processed/Dataset_v3')
+ROOT_DIR = os.path.abspath('../../data/processed/Dataset_v4')
 
 IMAGE_DIR = os.path.join(ROOT_DIR, "bottle/train")
 ANNOTATION_DIR = os.path.join(ROOT_DIR, "annotations/train")
@@ -50,6 +50,11 @@ CATEGORIES = [
     {
         'id': 3,
         'name': 'label',
+        'supercategory': 'water_bottle',
+    },
+{
+        'id': 4,
+        'name': 'bg',
         'supercategory': 'water_bottle',
     },
 ]

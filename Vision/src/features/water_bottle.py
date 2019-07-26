@@ -243,7 +243,7 @@ def train(model):
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
                 epochs=30,
-                layers='heads')
+                layers='all')
 
 def build_water_bottle_results(dataset, image_ids, rois, class_ids, scores, masks):
     """Arrange results to match COCO specs in http://cocodataset.org/#format

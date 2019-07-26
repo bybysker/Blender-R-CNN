@@ -4,18 +4,20 @@ import datetime
 import json
 import os
 import re
+import sys
 import fnmatch
 from PIL import Image
 import numpy as np
-from pycococreatortools import pycococreatortools
+
+sys.path.append('/Users/p099947-dev/PycharmProjects/Vision/')
+from pycococreator.pycococreatortools import pycococreatortools
 
 #os.environ['ROOT_DIR'] = '/Users/p099947-dev/PycharmProjects/Vision/Vision'
 #ROOT_DIR = os.environ['ROOT_DIR']
 
-ROOT_DIR = os.path.abspath('../..')
-
-IMAGE_DIR = os.path.join(ROOT_DIR, "bottle/val")
-ANNOTATION_DIR = os.path.join(ROOT_DIR, "annotations/val")
+ROOT_DIR = '/Users/p099947-dev/Desktop/Master2RD/Trained_Bottle/Vision_vm_trained'
+IMAGE_DIR = os.path.join(ROOT_DIR, "notebooks/Images")
+ANNOTATION_DIR = os.path.join(ROOT_DIR, "notebooks/Masks")
 
 INFO = {
     "description": "Water Bottle Dataset",
@@ -120,8 +122,8 @@ def main():
                     segmentation_id = segmentation_id + 1
 
             image_id = image_id + 1
-
-    with open('{}/instances_val.json'.format(ROOT_DIR), 'w') as output_json_file:
+#    print(coco_output)
+    with open('file.json', 'w') as output_json_file:
         json.dump(coco_output, output_json_file)
 
 

@@ -49,7 +49,7 @@ def make_masks(image):
 ROOT_DIR = os.path.abspath('../..')
 
 
-ann_folder_path = os.path.join(ROOT_DIR, 'data/processed/Dataset_v3/annotations/val')
+ann_folder_path = os.path.join(ROOT_DIR, 'data/processed/Dataset_v4/annotations/val')
 
 masks_folder_path = os.path.join(ROOT_DIR, 'data/raw/Dataset_v3/masks/val')
 
@@ -63,6 +63,7 @@ for file in files:
         new_couv_name = "{}_cap".format(filename)
         new_bott_name = "{}_bottle".format(filename)
         new_etiq_name = "{}_label".format(filename)
+        new_bg_name = "{}_bg".format(filename)
 
         image = cv2.imread(os.path.join(masks_folder_path,file))
         blurred_image = cv2.GaussianBlur(image, (5, 5), 0)
@@ -70,23 +71,34 @@ for file in files:
 
         # Interval of color to track
 
-        # couvercle:
+        # couvercle
         lower_couv = np.array([0, 100, 100])
-        upper_couv = np.array([10, 255, 255])
+        upper_couv = np.array([0, 255, 255])
 
         # bouteille :
-        lower_bott = np.array([60 - 5, 100, 100])
-        upper_bott = np.array([60 + 5, 255, 255])
+        lower_bott = np.array([60, 100, 255])
+        upper_bott = np.array([60, 255, 255])
 
         # etiquette :
-        lower_etiq = np.array([120 - 5, 100, 100])
-        upper_etiq = np.array([120 + 5, 255, 255])
+        lower_etiq = np.array([120, 100, 100])
+        upper_etiq = np.array([120, 255, 255])
 
-        # Mask obtention
+        # Mask obtention + Mask processing
         mask_couv = cv2.inRange(hsv_image, lower_couv, upper_couv)
-        mask_bott = cv2.inRange(hsv_image, lower_bott, upper_bott)
-        mask_etiq = cv2.inRange(hsv_image, lower_etiq, upper_etiq)
+        mask_couv = cv2.morphologyEx(mask_couv, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
+        mask_couv = cv2.morphologyEx(mask_couv, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
 
+        mask_bott = cv2.inRange(hsv_image, lower_bott, upper_bott)
+        mask_bott = cv2.morphologyEx(mask_bott, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
+        mask_bott = cv2.morphologyEx(mask_bott, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
+
+        mask_etiq = cv2.inRange(hsv_image, lower_etiq, upper_etiq)
+        mask_etiq = cv2.morphologyEx(mask_etiq, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
+        mask_etiq = cv2.morphologyEx(mask_etiq, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5)))
+
+        mask_tot = mask_bott + mask_couv + mask_etiq
+
+        mask_bg = 255 - mask_tot
 
 
         cv2.imwrite(os.path.join(ann_folder_path,new_couv_name + file_extension),
@@ -95,5 +107,6 @@ for file in files:
                     mask_bott)
         cv2.imwrite(os.path.join(ann_folder_path,new_etiq_name + file_extension),
                     mask_etiq)
-
+        cv2.imwrite(os.path.join(ann_folder_path, new_bg_name + file_extension),
+                    mask_bg)
 
